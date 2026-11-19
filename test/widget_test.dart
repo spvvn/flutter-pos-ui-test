@@ -1,30 +1,49 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-
 import 'package:flutter_pos_app/main.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
+  testWidgets('adds and removes products from the order', (tester) async {
+    tester.view.physicalSize = const Size(1280, 900);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
     await tester.pumpWidget(const MyApp());
+    expect(
+        find.text('Tap a menu item to add it to the order.'), findsOneWidget);
+    expect(tester.takeException(), isNull);
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    await tester.tap(find.text('Original Burger').first);
+    await tester.pumpAndSettle();
+    expect(find.text('Subtotal'), findsOneWidget);
+    expect(find.text('\$5.99'), findsWidgets);
+    expect(tester.takeException(), isNull);
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+    await tester.tap(find.byTooltip('Add one Original Burger'));
+    await tester.pumpAndSettle();
+    expect(find.text('\$11.98'), findsOneWidget);
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    await tester.tap(find.byTooltip('Remove one Original Burger'));
+    await tester.pumpAndSettle();
+    expect(find.text('\$5.99'), findsWidgets);
+
+    await tester.tap(find.byTooltip('Remove one Original Burger'));
+    await tester.pumpAndSettle();
+    expect(
+        find.text('Tap a menu item to add it to the order.'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('fits on a narrow screen without layout exceptions',
+      (tester) async {
+    tester.view.physicalSize = const Size(390, 844);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+    await tester.pumpWidget(const MyApp());
+    await tester.pumpAndSettle();
+    expect(find.text('Lorem Restaurant'), findsOneWidget);
+    expect(find.text('Order · Table 8'), findsOneWidget);
+    expect(tester.takeException(), isNull);
   });
 }

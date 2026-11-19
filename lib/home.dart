@@ -1,7 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -11,488 +8,405 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final Map<String, int> _quantities = {};
+
+  static const _products = <_Product>[
+    _Product('1', 'Original Burger', 5.99, '11 item'),
+    _Product('2', 'Double Burger', 10.99, '10 item'),
+    _Product('3', 'Cheese Burger', 6.99, '7 item'),
+    _Product('4', 'Double Cheese Burger', 12.99, '20 item'),
+    _Product('5', 'Spicy Burger', 7.39, '12 item'),
+    _Product('6', 'Special Black Burger', 7.39, '39 item'),
+    _Product('7', 'Special Cheese Burger', 8.00, '2 item'),
+    _Product('8', 'Jumbo Cheese Burger', 15.99, '2 item'),
+    _Product('9', 'Spicy Burger', 7.39, '12 item'),
+    _Product('10', 'Special Black Burger', 7.39, '39 item'),
+    _Product('11', 'Special Cheese Burger', 8.00, '2 item'),
+    _Product('12', 'Jumbo Cheese Burger', 15.99, '2 item'),
+  ];
+
+  void _add(_Product product) {
+    setState(() => _quantities.update(product.id, (count) => count + 1,
+        ifAbsent: () => 1));
+  }
+
+  void _remove(_Product product) {
+    setState(() {
+      final count = _quantities[product.id] ?? 0;
+      if (count <= 1) {
+        _quantities.remove(product.id);
+      } else {
+        _quantities[product.id] = count - 1;
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Expanded(
-          flex: 14,
-          child: Column(
-            children: [
-              _topMenu(
-                title: 'Lorem Restourant',
-                subTitle: '20 October 2022',
-                action: _search(),
-              ),
-              Container(
-                height: 100,
-                padding: const EdgeInsets.symmetric(vertical: 24),
-                child: ListView(
-                  scrollDirection: Axis.horizontal,
-                  children: [
-                    _itemTab(
-                      icon: 'icons/icon-burger.png',
-                      title: 'Burger',
-                      isActive: true,
-                    ),
-                    _itemTab(
-                      icon: 'icons/icon-noodles.png',
-                      title: 'Noodles',
-                      isActive: false,
-                    ),
-                    _itemTab(
-                      icon: 'icons/icon-drinks.png',
-                      title: 'Drinks',
-                      isActive: false,
-                    ),
-                    _itemTab(
-                      icon: 'icons/icon-desserts.png',
-                      title: 'Desserts',
-                      isActive: false,
-                    )
-                  ],
-                ),
-              ),
-              Expanded(
-                child: GridView.count(
-                  crossAxisCount: 4,
-                  childAspectRatio: (1 / 1.2),
-                  children: [
-                    _item(
-                      image: 'items/1.png',
-                      title: 'Original Burger',
-                      price: '\$5.99',
-                      item: '11 item',
-                    ),
-                    _item(
-                      image: 'items/2.png',
-                      title: 'Double Burger',
-                      price: '\$10.99',
-                      item: '10 item',
-                    ),
-                    _item(
-                      image: 'items/3.png',
-                      title: 'Cheese Burger',
-                      price: '\$6.99',
-                      item: '7 item',
-                    ),
-                    _item(
-                      image: 'items/4.png',
-                      title: 'Double Cheese Burger',
-                      price: '\$12.99',
-                      item: '20 item',
-                    ),
-                    _item(
-                      image: 'items/5.png',
-                      title: 'Spicy Burger',
-                      price: '\$7.39',
-                      item: '12 item',
-                    ),
-                    _item(
-                      image: 'items/6.png',
-                      title: 'Special Black Burger',
-                      price: '\$7.39',
-                      item: '39 item',
-                    ),
-                    _item(
-                      image: 'items/7.png',
-                      title: 'Special Cheese Burger',
-                      price: '\$8.00',
-                      item: '2 item',
-                    ),
-                    _item(
-                      image: 'items/8.png',
-                      title: 'Jumbo Cheese Burger',
-                      price: '\$15.99',
-                      item: '2 item',
-                    ),
-                    _item(
-                      image: 'items/9.png',
-                      title: 'Spicy Burger',
-                      price: '\$7.39',
-                      item: '12 item',
-                    ),
-                    _item(
-                      image: 'items/10.png',
-                      title: 'Special Black Burger',
-                      price: '\$7.39',
-                      item: '39 item',
-                    ),
-                    _item(
-                      image: 'items/11.png',
-                      title: 'Special Cheese Burger',
-                      price: '\$8.00',
-                      item: '2 item',
-                    ),
-                    _item(
-                      image: 'items/12.png',
-                      title: 'Jumbo Cheese Burger',
-                      price: '\$15.99',
-                      item: '2 item',
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-        Expanded(flex: 1, child: Container()),
-        Expanded(
-          flex: 5,
-          child: Column(
-            children: [
-              _topMenu(
-                title: 'Order',
-                subTitle: 'Table 8',
-                action: Container(),
-              ),
-              const SizedBox(height: 20),
-              Expanded(
-                child: ListView(
-                  children: [
-                    _itemOrder(
-                      image: 'items/1.png',
-                      title: 'Orginal Burger',
-                      qty: '2',
-                      price: '\$5.99',
-                    ),
-                    _itemOrder(
-                      image: 'items/2.png',
-                      title: 'Double Burger',
-                      qty: '3',
-                      price: '\$10.99',
-                    ),
-                    _itemOrder(
-                      image: 'items/6.png',
-                      title: 'Special Black Burger',
-                      qty: '2',
-                      price: '\$8.00',
-                    ),
-                    _itemOrder(
-                      image: 'items/4.png',
-                      title: 'Special Cheese Burger',
-                      qty: '2',
-                      price: '\$12.99',
-                    ),
-                  ],
-                ),
-              ),
-              Expanded(
-                child: Container(
-                  padding: const EdgeInsets.all(20),
-                  margin: const EdgeInsets.symmetric(vertical: 10),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(14),
-                    color: const Color(0xff1f2029),
-                  ),
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: const [
-                          Text(
-                            'Sub Total',
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white),
-                          ),
-                          Text(
-                            '\$40.32',
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 20),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: const [
-                          Text(
-                            'Tax',
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white),
-                          ),
-                          Text(
-                            '\$4.32',
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white),
-                          ),
-                        ],
-                      ),
-                      Container(
-                        margin: const EdgeInsets.symmetric(vertical: 20),
-                        height: 2,
-                        width: double.infinity,
-                        color: Colors.white,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: const [
-                          Text(
-                            'Total',
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white),
-                          ),
-                          Text(
-                            '\$44.64',
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 30),
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          onPrimary: Colors.white,
-                          primary: Colors.deepOrange,
-                          padding: const EdgeInsets.symmetric(vertical: 8),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                        ),
-                        onPressed: () {},
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: const [
-                            Icon(Icons.print, size: 16),
-                            SizedBox(width: 6),
-                            Text('Print Bills')
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
+    return LayoutBuilder(builder: (context, constraints) {
+      final narrow = constraints.maxWidth < 760;
+      final menu = _buildMenu();
+      final order = _buildOrder();
+
+      if (narrow) {
+        return Column(children: [
+          Expanded(flex: 3, child: menu),
+          const SizedBox(height: 12),
+          Expanded(flex: 2, child: order),
+        ]);
+      }
+
+      return Row(children: [
+        Expanded(flex: 3, child: menu),
+        const SizedBox(width: 16),
+        SizedBox(width: constraints.maxWidth * 0.29, child: order),
+      ]);
+    });
   }
 
-  Widget _itemOrder({
-    required String image,
-    required String title,
-    required String qty,
-    required String price,
-  }) {
-    return Container(
-      padding: const EdgeInsets.all(8),
-      margin: const EdgeInsets.only(bottom: 10),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(14),
-        color: const Color(0xff1f2029),
-      ),
-      child: Row(
-        children: [
-          Container(
-            height: 60,
-            width: 60,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12),
-              image: DecorationImage(
-                image: AssetImage(image),
-                fit: BoxFit.cover,
-              ),
-            ),
-          ),
-          const SizedBox(width: 10),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: const TextStyle(
-                    fontSize: 10,
-                    fontWeight: FontWeight.bold,
+  Widget _buildMenu() {
+    return Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+      Row(children: [
+        const Expanded(
+          child:
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Text('Lorem Restaurant',
+                style: TextStyle(
                     color: Colors.white,
-                  ),
-                ),
-                const SizedBox(height: 10),
-                Text(
-                  price,
-                  style: const TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                )
-              ],
-            ),
-          ),
-          Text(
-            '$qty x',
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-            ),
-          ),
-        ],
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold)),
+            SizedBox(height: 4),
+            Text('20 October 2022',
+                style: TextStyle(color: Colors.white54, fontSize: 11)),
+          ]),
+        ),
+        if (MediaQuery.sizeOf(context).width >= 600)
+          SizedBox(width: 220, child: _search()),
+      ]),
+      const SizedBox(height: 14),
+      SizedBox(
+        height: 72,
+        child: ListView(
+          scrollDirection: Axis.horizontal,
+          children: const [
+            _Category(
+                icon: 'assets/icons/icon-burger.png',
+                title: 'Burger',
+                active: true),
+            _Category(icon: 'assets/icons/icon-noodles.png', title: 'Noodles'),
+            _Category(icon: 'assets/icons/icon-drinks.png', title: 'Drinks'),
+            _Category(
+                icon: 'assets/icons/icon-desserts.png', title: 'Desserts'),
+          ],
+        ),
       ),
-    );
+      const SizedBox(height: 8),
+      Expanded(
+        child: LayoutBuilder(builder: (context, constraints) {
+          final columns = constraints.maxWidth >= 850
+              ? 4
+              : constraints.maxWidth >= 560
+                  ? 3
+                  : constraints.maxWidth >= 340
+                      ? 2
+                      : 1;
+          final ratio = columns == 4
+              ? 0.82
+              : columns == 3
+                  ? 0.78
+                  : 0.9;
+          return GridView.builder(
+            padding: const EdgeInsets.only(bottom: 8, right: 4),
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: columns,
+              childAspectRatio: ratio,
+              crossAxisSpacing: 10,
+              mainAxisSpacing: 10,
+            ),
+            itemCount: _products.length,
+            itemBuilder: (context, index) {
+              final product = _products[index];
+              return _ProductCard(
+                product: product,
+                quantity: _quantities[product.id] ?? 0,
+                onAdd: () => _add(product),
+              );
+            },
+          );
+        }),
+      ),
+    ]);
   }
 
-  Widget _item({
-    required String image,
-    required String title,
-    required String price,
-    required String item,
-  }) {
+  Widget _buildOrder() {
+    final ordered = _products
+        .where((product) => (_quantities[product.id] ?? 0) > 0)
+        .toList();
+    final subtotal = _products.fold<double>(
+      0,
+      (sum, product) => sum + product.price * (_quantities[product.id] ?? 0),
+    );
+    final tax = subtotal * 0.107;
+
     return Container(
-      margin: const EdgeInsets.only(right: 20, bottom: 20),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(18),
         color: const Color(0xff1f2029),
+        borderRadius: BorderRadius.circular(14),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            height: 130,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(16),
-              image: DecorationImage(
-                image: AssetImage(image),
-                fit: BoxFit.cover,
-              ),
-            ),
-          ),
-          const SizedBox(height: 10),
-          Text(
-            title,
-            style: const TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-              fontSize: 14,
-            ),
-          ),
-          const SizedBox(height: 20),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                price,
-                style: const TextStyle(
-                  color: Colors.deepOrange,
-                  fontSize: 20,
-                ),
-              ),
-              Text(
-                item,
-                style: const TextStyle(
-                  color: Colors.white60,
-                  fontSize: 12,
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _itemTab(
-      {required String icon, required String title, required bool isActive}) {
-    return Container(
-      width: 180,
-      margin: const EdgeInsets.only(right: 26),
-      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 24),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        color: const Color(0xff1f2029),
-        border: isActive
-            ? Border.all(color: Colors.deepOrangeAccent, width: 3)
-            : Border.all(color: const Color(0xff1f2029), width: 3),
-      ),
-      child: Row(
-        children: [
-          Image.asset(
-            icon,
-            width: 38,
-          ),
-          const SizedBox(width: 8),
-          Text(
-            title,
-            style: const TextStyle(
-              fontSize: 14,
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-            ),
-          )
-        ],
-      ),
-    );
-  }
-
-  Widget _topMenu({
-    required String title,
-    required String subTitle,
-    required Widget action,
-  }) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              title,
-              style: const TextStyle(
+      child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+        const Text('Order · Table 8',
+            style: TextStyle(
                 color: Colors.white,
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
+                fontSize: 18,
+                fontWeight: FontWeight.bold)),
+        const SizedBox(height: 10),
+        Expanded(
+          child: ordered.isEmpty
+              ? const Center(
+                  child: Text('Tap a menu item to add it to the order.',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: Colors.white54)),
+                )
+              : ListView.builder(
+                  itemCount: ordered.length,
+                  itemBuilder: (context, index) {
+                    final product = ordered[index];
+                    final quantity = _quantities[product.id]!;
+                    return _OrderItem(
+                      product: product,
+                      quantity: quantity,
+                      onAdd: () => _add(product),
+                      onRemove: () => _remove(product),
+                    );
+                  },
+                ),
+        ),
+        const SizedBox(height: 8),
+        _totalRow('Subtotal', subtotal),
+        const SizedBox(height: 4),
+        _totalRow('Tax', tax),
+        const Divider(color: Colors.white38, height: 16),
+        _totalRow('Total', subtotal + tax, bold: true),
+        const SizedBox(height: 8),
+        SizedBox(
+          height: 40,
+          child: ElevatedButton.icon(
+            style: ElevatedButton.styleFrom(
+              foregroundColor: Colors.white,
+              backgroundColor: Colors.deepOrange,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8)),
+            ),
+            onPressed: ordered.isEmpty ? null : () {},
+            icon: const Icon(Icons.print, size: 16),
+            label: const Text('Print Bills'),
+          ),
+        ),
+      ]),
+    );
+  }
+
+  Widget _totalRow(String label, double amount, {bool bold = false}) {
+    final style = TextStyle(
+      color: Colors.white,
+      fontWeight: bold ? FontWeight.bold : FontWeight.normal,
+      fontSize: bold ? 16 : 13,
+    );
+    return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+      Text(label, style: style),
+      Text('\$${amount.toStringAsFixed(2)}', style: style),
+    ]);
+  }
+
+  Widget _search() => Container(
+        height: 40,
+        padding: const EdgeInsets.symmetric(horizontal: 12),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          color: const Color(0xff1f2029),
+        ),
+        child: const Row(children: [
+          Icon(Icons.search, color: Colors.white54, size: 19),
+          SizedBox(width: 8),
+          Expanded(
+            child: Text('Search menu here...',
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(color: Colors.white54, fontSize: 12)),
+          ),
+        ]),
+      );
+}
+
+class _Product {
+  const _Product(this.id, this.name, this.price, this.stock);
+
+  final String id;
+  final String name;
+  final double price;
+  final String stock;
+}
+
+class _ProductCard extends StatelessWidget {
+  const _ProductCard({
+    required this.product,
+    required this.quantity,
+    required this.onAdd,
+  });
+
+  final _Product product;
+  final int quantity;
+  final VoidCallback onAdd;
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: const Color(0xff1f2029),
+      borderRadius: BorderRadius.circular(16),
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        onTap: onAdd,
+        child: Padding(
+          padding: const EdgeInsets.all(10),
+          child:
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Expanded(
+              child: SizedBox.expand(
+                child: Image.asset('assets/items/${product.id}.png',
+                    fit: BoxFit.cover),
               ),
             ),
             const SizedBox(height: 6),
-            Text(
-              subTitle,
-              style: const TextStyle(
-                color: Colors.white54,
-                fontSize: 10,
+            Text(product.name,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 12)),
+            const SizedBox(height: 4),
+            Row(children: [
+              Expanded(
+                child: Text('\$${product.price.toStringAsFixed(2)}',
+                    style: const TextStyle(
+                        color: Colors.deepOrange,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold)),
               ),
-            ),
-          ],
+              if (quantity > 0)
+                Text('×$quantity ',
+                    style: const TextStyle(color: Colors.white, fontSize: 12)),
+              const Icon(Icons.add_circle, color: Colors.deepOrange, size: 20),
+            ]),
+          ]),
         ),
-        Expanded(flex: 1, child: Container(width: double.infinity)),
-        Expanded(flex: 5, child: action),
-      ],
+      ),
     );
   }
+}
 
-  Widget _search() {
+class _OrderItem extends StatelessWidget {
+  const _OrderItem({
+    required this.product,
+    required this.quantity,
+    required this.onAdd,
+    required this.onRemove,
+  });
+
+  final _Product product;
+  final int quantity;
+  final VoidCallback onAdd;
+  final VoidCallback onRemove;
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        width: double.infinity,
-        height: 40,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(18),
-          color: const Color(0xff1f2029),
+      margin: const EdgeInsets.only(bottom: 8),
+      padding: const EdgeInsets.all(7),
+      decoration: BoxDecoration(
+        color: const Color(0xff17181f),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Row(children: [
+        ClipRRect(
+          borderRadius: BorderRadius.circular(8),
+          child: Image.asset('assets/items/${product.id}.png',
+              width: 44, height: 44, fit: BoxFit.cover),
         ),
-        child: Row(
-          children: const [
-            Icon(
-              Icons.search,
-              color: Colors.white54,
-            ),
-            SizedBox(width: 10),
-            Text(
-              'Search menu here...',
-              style: TextStyle(color: Colors.white54, fontSize: 11),
-            )
-          ],
-        ));
+        const SizedBox(width: 8),
+        Expanded(
+          child:
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Text(product.name,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 11,
+                    fontWeight: FontWeight.bold)),
+            Text('\$${product.price.toStringAsFixed(2)} each',
+                style: const TextStyle(color: Colors.white60, fontSize: 11)),
+          ]),
+        ),
+        IconButton(
+          visualDensity: VisualDensity.compact,
+          constraints: const BoxConstraints.tightFor(width: 30, height: 34),
+          padding: EdgeInsets.zero,
+          tooltip: 'Remove one ${product.name}',
+          onPressed: onRemove,
+          icon: const Icon(Icons.remove_circle_outline,
+              color: Colors.white70, size: 18),
+        ),
+        Text('$quantity',
+            style: const TextStyle(color: Colors.white, fontSize: 12)),
+        IconButton(
+          visualDensity: VisualDensity.compact,
+          constraints: const BoxConstraints.tightFor(width: 30, height: 34),
+          padding: EdgeInsets.zero,
+          tooltip: 'Add one ${product.name}',
+          onPressed: onAdd,
+          icon: const Icon(Icons.add_circle_outline,
+              color: Colors.deepOrange, size: 18),
+        ),
+      ]),
+    );
+  }
+}
+
+class _Category extends StatelessWidget {
+  const _Category(
+      {required this.icon, required this.title, this.active = false});
+
+  final String icon;
+  final String title;
+  final bool active;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 142,
+      margin: const EdgeInsets.only(right: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        color: const Color(0xff1f2029),
+        border: Border.all(
+          color: active ? Colors.deepOrangeAccent : const Color(0xff1f2029),
+          width: 2,
+        ),
+      ),
+      child: Row(children: [
+        Image.asset(icon, width: 34, height: 34, fit: BoxFit.contain),
+        const SizedBox(width: 8),
+        Expanded(
+          child: Text(title,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 13,
+                  fontWeight: FontWeight.bold)),
+        ),
+      ]),
+    );
   }
 }
