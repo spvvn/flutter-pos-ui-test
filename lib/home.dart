@@ -67,7 +67,7 @@ class _HomePageState extends State<HomePage> {
   Widget _buildMenu() {
     return Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
       Row(children: [
-        const Expanded(
+        Expanded(
           child:
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Text('Lorem Restaurant',
@@ -226,7 +226,7 @@ class _HomePageState extends State<HomePage> {
           borderRadius: BorderRadius.circular(12),
           color: const Color(0xff1f2029),
         ),
-        child: const Row(children: [
+        child: Row(children: [
           Icon(Icons.search, color: Colors.white54, size: 19),
           SizedBox(width: 8),
           Expanded(
